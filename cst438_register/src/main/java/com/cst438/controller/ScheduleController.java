@@ -19,6 +19,7 @@ import org.springframework.web.server.ResponseStatusException;
 import com.cst438.domain.Course;
 import com.cst438.domain.CourseRepository;
 import com.cst438.domain.Enrollment;
+import com.cst438.domain.EnrollmentDTO;
 import com.cst438.domain.EnrollmentRepository;
 import com.cst438.domain.ScheduleDTO;
 import com.cst438.domain.Student;
@@ -155,4 +156,7 @@ public class ScheduleController {
 		return courseDTO;
 	}
 	
+	
 }
+
+
