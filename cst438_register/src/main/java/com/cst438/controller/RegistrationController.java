@@ -23,6 +23,7 @@ import com.cst438.domain.EnrollmentDTO;
 import com.cst438.domain.EnrollmentRepository;
 import com.cst438.domain.ScheduleDTO;
 import com.cst438.domain.Student;
+import com.cst438.domain.StudentDTO;
 import com.cst438.domain.StudentRepository;
 import com.cst438.service.GradebookService;
 
@@ -48,17 +49,18 @@ public class RegistrationController {
 	 */
 	@PostMapping("/addStudent")
 	@Transactional
-	private void addStudent(String email, String name) {
-		String student_email = email;   		// student's email 
+	private Student addStudent(@RequestBody StudentDTO studentDTO) {
+		String student_email = studentDTO.getEmail();   		// student's email 
 		Student check_student = studentRepository.findByEmail(student_email);
 		if (check_student == null) { 			// Student should not exist in db
 			Student student = new Student();
-			student.setName(name);
+			student.setName(studentDTO.getName());
 			student.setEmail(student_email);
 			student.setStatus("Good Standing"); // For now, we'll say a new student has "good standing" 
 			student.setStatusCode(0); 			// again, 0 == good standing for now
 			student.setStudent_id(90001); 		// Placeholder id for now 
 			Student savedStudent = studentRepository.save(student);
+			return savedStudent;
 		} 
 		else throw new ResponseStatusException( HttpStatus.BAD_REQUEST, "Student with email: " + student_email + " Already Enrolled");
 	}
@@ -70,7 +72,8 @@ public class RegistrationController {
 	//		 the status field is about student holds
 	@PostMapping("/setHold")
 	@Transactional
-	private int setHold(String email) {
+	private int setHold(@RequestBody StudentDTO studentDTO) {
+		String email = studentDTO.getEmail();
 		Student student = studentRepository.findByEmail(email);
 		if (student != null)  {						// Student should exist in db
 			if (student.getStatusCode() == -1) {	// Student should not already have a hold 
@@ -89,7 +92,8 @@ public class RegistrationController {
 	 */
 	@PostMapping("/releaseHold")
 	@Transactional
-	private int releaseHold(String email) {
+	private int releaseHold(@RequestBody StudentDTO studentDTO) {
+		String email = studentDTO.getEmail();
 		Student student = studentRepository.findByEmail(email);
 		if (student != null)  {						// Student should exist in db
 			if (student.getStatusCode() != -1) {	// Student should have a hold to release 
