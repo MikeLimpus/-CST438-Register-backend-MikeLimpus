@@ -25,6 +25,7 @@ import org.springframework.web.server.ResponseStatusException;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 import com.cst438.controller.RegistrationController;
 import com.cst438.controller.ScheduleController;
@@ -52,7 +53,6 @@ public class JunitTestRegistration {
 	public static final String TEST_STUDENT_STATUS = "Good Standing";
 	public static final int TEST_STUDENT_STATUS_CODE = 0;
 	
-	@MockBean
 	CourseRepository courseRepository;
 
 	@MockBean
@@ -76,9 +76,8 @@ public class JunitTestRegistration {
 		student.setEmail(TEST_STUDENT_EMAIL);
 		student.setStatus(TEST_STUDENT_STATUS); 
 		student.setStatusCode(TEST_STUDENT_STATUS_CODE); 			
-		student.setStudent_id(TEST_STUDENT_ID); 
-		
-		given(studentRepository.findByEmail(TEST_STUDENT_EMAIL)).willReturn(student);
+		student.setStudent_id(TEST_STUDENT_ID);
+		given(studentRepository.findByEmail(TEST_STUDENT_EMAIL)).willReturn(null);
 		response = mvc.perform(
 			MockMvcRequestBuilders
 				.post("/addStudent")
@@ -122,7 +121,7 @@ public class JunitTestRegistration {
 	
 	@Test 
 	public void releaseHold() throws Exception {
-		MockHttpServletResponse response;
+		MockHttpServletResponse response; // Spring mock object
 		// Create a test student
 		Student student = new Student();
 		student.setName(TEST_STUDENT_NAME);
